@@ -1,0 +1,50 @@
+#!/bin/bash
+
+####################################
+#Author: Aayush
+#Date: 29th-September
+#
+#Version: V1
+#
+#This script will report the aws resource usage
+####################################
+
+
+#AWS S3
+#AWS EC2
+#AWS Lambda
+#AWS IAM USERS
+
+
+set -x #Enable debugging
+
+# Define output file
+output_file="resourcesTracker"
+
+# Log timestamp to differentiate between cron runs
+echo "-------------------------------" >> $output_file
+echo "Script run on: $(date)" >> $output_file
+echo "-------------------------------" >> $output_file
+
+# List S3 buckets and append output to the file
+echo "S3 Buckets:" >> $output_file
+aws s3 ls >> $output_file
+echo "" >> $output_file
+
+# List EC2 instances and append output to the file
+echo "EC2 Instances:" >> $output_file
+aws ec2 describe-instances | jq '.Reservations[].Instances[].InstanceId' >> $output_file
+echo "" >> $output_file
+
+# List Lambda functions and append output to the file
+echo "Lambda Functions:" >> $output_file
+aws lambda list-functions >> $output_file
+echo "" >> $output_file
+
+# List IAM users and append output to the file
+echo "IAM Users:" >> $output_file
+aws iam list-users >> $output_file
+echo "" >> $output_file
+
+#Add a log completion message
+echo "Script completed at: $(date)" >> $output_file
